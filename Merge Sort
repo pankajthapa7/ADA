@@ -1,0 +1,82 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+// Function to merge two subarrays
+void merge(int arr[], int left[], int right[], int left_size, int right_size) {
+ int i = 0, j = 0, k = 0;
+ // Merge elements from left[] and right[] back into arr[]
+ while (i < left_size && j < right_size) {
+ if (left[i] <= right[j]) {
+ arr[k] = left[i];
+ i++;
+ } else {
+ arr[k] = right[j];
+ j++;
+ }
+ k++;
+ }
+ // Copy the remaining elements of left[], if any
+ while (i < left_size) {
+ arr[k] = left[i];
+ i++;
+ k++;
+ }
+ // Copy the remaining elements of right[], if any
+ while (j < right_size) {
+ arr[k] = right[j];
+ j++;
+ k++;
+ }
+}
+// Merge Sort function
+void mergeSort(int arr[], int size) {
+ if (size < 2) {
+ return; // Base case: array is already sorted
+ }
+ int mid = size / 2;
+ int left[mid];
+ int right[size - mid];
+ // Split the array into two subarrays
+ for (int i = 0; i < mid; i++) {
+ left[i] = arr[i];
+ }
+ for (int i = mid; i < size; i++) {
+ right[i - mid] = arr[i];
+ }
+ // Recursive calls to mergeSort() for the subarrays
+ mergeSort(left, mid);
+ mergeSort(right, size - mid);
+ // Merge the sorted subarrays
+ merge(arr, left, right, mid, size - mid);
+}
+int main() {
+ int n;
+ printf("Enter the number of elements: ");
+ scanf("%d", &n);
+ // Generate random elements
+ int arr[n];
+ srand(time(0));
+ for (int i = 0; i < n; i++) {
+ arr[i] = rand() % 100; // Random numbers between 0 and 99
+ }
+ // Print the unsorted array
+ printf("Unsorted array:\n");
+ for (int i = 0; i < n; i++) {
+ printf("%d ", arr[i]);
+ }
+ printf("\n");
+ // Perform Merge Sort
+ clock_t start_time = clock();
+ mergeSort(arr, n);
+ clock_t end_time = clock();
+ // Print the sorted array
+ printf("Sorted array:\n");
+ for (int i = 0; i < n; i++) {
+ printf("%d ", arr[i]);
+ }
+ printf("\n");
+ // Calculate and print the time taken
+ double time_taken = (double)(end_time - start_time) / CLOCKS_PER_SEC;
+ printf("Time taken: %.6fs\n", time_taken);
+ return 0;
+}
